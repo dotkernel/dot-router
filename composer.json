@@ -1,0 +1,62 @@
+{
+    "name": "dotkernel/dot-router",
+    "type": "library",
+    "description": "Dotkernel component to build complex routes, based on mezzio/mezzio-fastroute",
+    "license": "MIT",
+    "homepage": "https://github.com/dotkernel/dot-router",
+    "keywords": [
+        "dotkernel",
+        "router",
+        "mezzio",
+        "fastroute",
+        "psr-15"
+    ],
+    "authors": [
+        {
+            "name": "Dotkernel Team",
+            "email": "team@dotkernel.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "require": {
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+        "laminas/laminas-stratigility": "^4.1",
+        "mezzio/mezzio-fastroute": "^3.12",
+        "psr/container": "^1.0 || ^2.0",
+        "psr/http-message": "^1.0 || ^2.0",
+        "psr/http-server-middleware": "^1.0"
+
+    },
+    "require-dev": {
+        "laminas/laminas-coding-standard": "^3.0",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dot\\Router\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DotTest\\Router\\": "test/"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test",
+            "@static-analysis"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "static-analysis": "phpstan analyse --memory-limit 1G"
+    }
+}

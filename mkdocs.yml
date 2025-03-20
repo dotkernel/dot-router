@@ -1,0 +1,23 @@
+docs_dir: docs/book
+site_dir: docs/html
+extra:
+  project: Packages
+  current_version: v1
+  versions:
+    - v1
+nav:
+  - Home: index.md
+  - v1:
+      - Overview: v1/overview.md
+      - Installation: v1/installation.md
+      - Configuration: v1/configuration.md
+      - Features: v1/features.md
+      - Usage: v1/usage.md
+      - Tutorials:
+          - "Creating a single route": v1/tutorials/create-single-route.md
+          - "Creating route groups": v1/tutorials/create-route-group.md
+site_name: dot-router
+site_description: "Dotkernel component to build complex routes, based on mezzio/mezzio-fastroute"
+repo_url: "https://github.com/dotkernel/dot-router"
+plugins:
+  - search

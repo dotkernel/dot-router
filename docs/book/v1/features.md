@@ -17,8 +17,8 @@ Besides the features provided by `mezzio/mezzio-fastroute`, `dot-router` offers 
 In order to use this feature, first get an instance of the `Dot\Router\RouteCollector` using the below code:
 
 ```php
-/** @var RouteCollectorInterface $routeCollector */
-$routeCollector = $container->get(RouteCollectorInterface::class);
+/** @var \Dot\Router\RouteCollectorInterface $routeCollector */
+$routeCollector = $container->get(\Dot\Router\RouteCollectorInterface::class);
 ```
 
 Then rewrite the above routes using the below code:
@@ -36,10 +36,10 @@ When `dot-router` registers the routes, it will automatically prepend the prefix
 
 ### Advantages
 
-- DRY: no need for repeating common route parts
-- encapsulation: similar routes are grouped in a single block of code (vs each route a separate statement)
-- easy path refactoring: modify all routes at once by changing only the prefix
-- easy copying/moving: copying/moving an entire group makes sure that you don't accidentally omit a route
+- DRY - no need for repeating common route parts
+- encapsulation - similar routes are grouped in a single block of code (vs each route a separate statement)
+- easy path refactoring - modify all routes at once by changing only the prefix
+- easy copying/moving - copying/moving an entire group makes sure that you don't accidentally omit a route
 
 ## Exclude middleware
 
@@ -76,5 +76,5 @@ $app->post('/product/create', [CheckOwnerMiddleware::class, CreateProductHandler
 
 ### Advantages
 
-- extends the DRY feature of route groups by allowing to specify common middlewares only once per route
+- extends the DRYness of route groups by allowing to specify common middlewares only once per route
 - shorter and easier-to-read route definitions

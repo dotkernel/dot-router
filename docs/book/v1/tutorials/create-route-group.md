@@ -5,8 +5,8 @@
 Get an instance of the `Dot\Router\RouteCollector` using the below code:
 
 ```php
-/** @var RouteCollectorInterface $routeCollector */
-$routeCollector = $container->get(RouteCollectorInterface::class);
+/** @var \Dot\Router\RouteCollectorInterface $routeCollector */
+$routeCollector = $container->get(\Dot\Router\RouteCollectorInterface::class);
 ```
 
 Create a route group, by setting the route group prefix and optionally a(n array of) common middleware(s):

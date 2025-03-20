@@ -308,8 +308,8 @@ $app-&gt;patch('/product/update/{id}', UpdateProductHandler::class, 'product:upd
 $app-&gt;get('/product/view/{id}', GetProductHandler::class, 'product:view');</code></pre>
 <p>Besides the features provided by <code>mezzio/mezzio-fastroute</code>, <code>dot-router</code> offers route groups, which are collections of routes that (partially) share the same path.</p>
 <p>In order to use this feature, first get an instance of the <code>Dot\Router\RouteCollector</code> using the below code:</p>
-<pre class="highlight"><code class="language-php">/** @var RouteCollectorInterface $routeCollector */
-$routeCollector = $container-&gt;get(RouteCollectorInterface::class);</code></pre>
+<pre class="highlight"><code class="language-php">/** @var \Dot\Router\RouteCollectorInterface $routeCollector */
+$routeCollector = $container-&gt;get(\Dot\Router\RouteCollectorInterface::class);</code></pre>
 <p>Then rewrite the above routes using the below code:</p>
 <pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/product')
     -&gt;post('/create', CreateProductHandler::class, 'product:create');
@@ -320,15 +320,10 @@ $routeCollector = $container-&gt;get(RouteCollectorInterface::class);</code></pr
 When <code>dot-router</code> registers the routes, it will automatically prepend the prefix to each route path.</p>
 <h3 id="advantages">Advantages</h3>
 <ul>
-<li>
-<div class="admonition dry">
-<p class="admonition-title">Dry</p>
-<p>no need for repeating common route parts</p>
-</div>
-</li>
-<li>encapsulation: similar routes are grouped in a single block of code (vs each route a separate statement)</li>
-<li>easy path refactoring: modify all routes at once by changing only the prefix</li>
-<li>easy copying/moving: copying/moving an entire group makes sure that you don't accidentally omit a route</li>
+<li>DRY - no need for repeating common route parts</li>
+<li>encapsulation - similar routes are grouped in a single block of code (vs each route a separate statement)</li>
+<li>easy path refactoring - modify all routes at once by changing only the prefix</li>
+<li>easy copying/moving - copying/moving an entire group makes sure that you don't accidentally omit a route</li>
 </ul>
 <h2 id="exclude-middleware">Exclude middleware</h2>
 <p>Besides sharing the same path, sometimes routes may need to share handlers/middlewares too.
@@ -350,7 +345,7 @@ This way all group middlewares will be prepended to the route's handler, so this
 <pre class="highlight"><code class="language-php">$app-&gt;post('/product/create', [CheckOwnerMiddleware::class, CreateProductHandler::class], 'product:create')</code></pre>
 <h3 id="advantages_1">Advantages</h3>
 <ul>
-<li>extends the DRY feature of route groups by allowing to specify common middlewares only once per route</li>
+<li>extends the DRYness of route groups by allowing to specify common middlewares only once per route</li>
 <li>shorter and easier-to-read route definitions</li>
 </ul>
 

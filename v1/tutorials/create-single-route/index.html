@@ -332,8 +332,8 @@
 <p>Following this tutorial assumes that you already completed the <a href="../../installation/">installation</a> and <a href="../../configuration/">configuration</a> steps.</p>
 </blockquote>
 <p>Get an instance of the <code>Dot\Router\RouteCollector</code> using the below code:</p>
-<pre class="highlight"><code class="language-php">/** @var RouteCollectorInterface $routeCollector */
-$routeCollector = $container-&gt;get(RouteCollectorInterface::class);</code></pre>
+<pre class="highlight"><code class="language-php">/** @var \Dot\Router\RouteCollectorInterface $routeCollector */
+$routeCollector = $container-&gt;get(\Dot\Router\RouteCollectorInterface::class);</code></pre>
 <h2 id="create-a-route-that-responds-to-any-request-method">Create a route that responds to any request method</h2>
 <pre class="highlight"><code class="language-php">$routeCollector-&gt;any('/path', SomeHandler::class, 'route-name');</code></pre>
 <p><code>any()</code> method arguments:</p>

@@ -297,8 +297,8 @@
 <p>Following this tutorial assumes that you already completed the <a href="../../installation/">installation</a> and <a href="../../configuration/">configuration</a> steps.</p>
 </blockquote>
 <p>Get an instance of the <code>Dot\Router\RouteCollector</code> using the below code:</p>
-<pre class="highlight"><code class="language-php">/** @var RouteCollectorInterface $routeCollector */
-$routeCollector = $container-&gt;get(RouteCollectorInterface::class);</code></pre>
+<pre class="highlight"><code class="language-php">/** @var \Dot\Router\RouteCollectorInterface $routeCollector */
+$routeCollector = $container-&gt;get(\Dot\Router\RouteCollectorInterface::class);</code></pre>
 <p>Create a route group, by setting the route group prefix and optionally a(n array of) common middleware(s):</p>
 <pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/product', SomeMiddleware::class)</code></pre>
 <p>Then start appending routes to the route group by chaining them:</p>

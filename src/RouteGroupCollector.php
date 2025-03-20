@@ -10,7 +10,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 use function array_filter;
-use function count;
+use function array_merge;
 use function in_array;
 use function is_array;
 use function is_callable;
@@ -183,7 +183,19 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
         array|string $excludeMiddleware = [],
     ): MiddlewareInterface {
-        if (count($excludeMiddleware) === 0 || is_callable($middleware)) {
+        if (is_string($excludeMiddleware)) {
+            $excludeMiddleware = [$excludeMiddleware];
+        }
+
+        $prependMiddleware = [];
+        if ($this->middleware !== null) {
+            $prependMiddleware = $this->middleware;
+            if (! is_array($prependMiddleware)) {
+                $prependMiddleware = [$prependMiddleware];
+            }
+        }
+
+        if (is_callable($middleware)) {
             return $this->middlewareFactory->prepare($middleware);
         }
 
@@ -191,10 +203,7 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
             $middleware = [$middleware];
         }
 
-        if (is_string($excludeMiddleware)) {
-            $excludeMiddleware = [$excludeMiddleware];
-        }
-
+        $middleware = array_merge($prependMiddleware, $middleware);
         $middleware = array_filter(
             $middleware,
             function (callable|string|MiddlewareInterface|RequestHandlerInterface $item) use ($excludeMiddleware) {

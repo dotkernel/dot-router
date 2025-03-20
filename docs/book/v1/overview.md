@@ -4,10 +4,6 @@ Dotkernel component to build complex routes, based on [mezzio/mezzio-fastroute](
 
 > dot-router is a wrapper on top of [mezzio/mezzio-fastroute](https://github.com/mezzio/mezzio-fastroute)
 
-## Documentation
-
-Documentation is available at: https://docs.dotkernel.org/dot-router/.
-
 ## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-router)

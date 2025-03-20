@@ -11,7 +11,7 @@ Documentation is available at: https://docs.dotkernel.org/dot-router/.
 ## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-router)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-router/1.0.1)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-router/1.0.2)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-router)](https://github.com/dotkernel/dot-router/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-router)](https://github.com/dotkernel/dot-router/network)
@@ -25,7 +25,7 @@ Documentation is available at: https://docs.dotkernel.org/dot-router/.
 ## Requirements
 
 - **PHP**: 8.1, 8.2, 8.3 or 8.4
-- **laminas/laminas-stratigility**: ^4.1
+- **laminas/laminas-stratigility**: ^3.0 || ^4.0
 - **mezzio/mezzio-fastroute**: ^3.12
 
 ## Setup

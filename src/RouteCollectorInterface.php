@@ -12,7 +12,7 @@ interface RouteCollectorInterface
 {
     public function group(
         string $prefix,
-        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        null|string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware = null,
     ): RouteGroupCollectorInterface;
 
     public function route(

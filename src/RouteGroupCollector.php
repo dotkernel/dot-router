@@ -33,9 +33,6 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this->prefix;
     }
 
-    /**
-     * @param non-empty-string $prefix
-     */
     public function setPrefix(string $prefix): self
     {
         $this->prefix = $prefix;
@@ -179,7 +176,7 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
     /**
      * @param class-string|list<class-string> $excludeMiddleware
      */
-    public function prepareMiddleware(
+    private function prepareMiddleware(
         string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
         array|string $excludeMiddleware = [],
     ): MiddlewareInterface {

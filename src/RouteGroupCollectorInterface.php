@@ -12,9 +12,6 @@ interface RouteGroupCollectorInterface
 {
     public function getPrefix(): string;
 
-    /**
-     * @param non-empty-string $prefix
-     */
     public function setPrefix(string $prefix): self;
 
     public function getMiddleware(): mixed;

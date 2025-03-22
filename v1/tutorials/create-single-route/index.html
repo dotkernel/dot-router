@@ -282,31 +282,11 @@
             <ul class="toc__list">
             
                 <li class="toc__entry">
-                    <a href="#create-a-route-that-responds-to-any-request-method" class="toc__link nav-link">Create a route that responds to any request method</a>
+                    <a href="#access-the-routecollector" class="toc__link nav-link">Access the RouteCollector</a>
                 </li>
             
                 <li class="toc__entry">
-                    <a href="#create-a-route-that-responds-to-specific-request-methods" class="toc__link nav-link">Create a route that responds to specific request methods</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#create-a-route-that-responds-to-delete-requests" class="toc__link nav-link">Create a route that responds to DELETE requests</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#create-a-route-that-responds-to-get-requests" class="toc__link nav-link">Create a route that responds to GET requests</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#create-a-route-that-responds-to-patch-requests" class="toc__link nav-link">Create a route that responds to PATCH requests</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#create-a-route-that-responds-to-post-requests" class="toc__link nav-link">Create a route that responds to POST requests</a>
-                </li>
-            
-                <li class="toc__entry">
-                    <a href="#create-a-route-that-responds-to-put-requests" class="toc__link nav-link">Create a route that responds to PUT requests</a>
+                    <a href="#chain-routes-to-the-routecollector" class="toc__link nav-link">Chain routes to the RouteCollector</a>
                 </li>
             
             </ul>
@@ -331,66 +311,77 @@
 <blockquote>
 <p>Following this tutorial assumes that you already completed the <a href="../../installation/">installation</a> and <a href="../../configuration/">configuration</a> steps.</p>
 </blockquote>
+<h2 id="access-the-routecollector">Access the RouteCollector</h2>
 <p>Get an instance of the <code>Dot\Router\RouteCollector</code> using the below code:</p>
 <pre class="highlight"><code class="language-php">/** @var \Dot\Router\RouteCollectorInterface $routeCollector */
 $routeCollector = $container-&gt;get(\Dot\Router\RouteCollectorInterface::class);</code></pre>
-<h2 id="create-a-route-that-responds-to-any-request-method">Create a route that responds to any request method</h2>
-<pre class="highlight"><code class="language-php">$routeCollector-&gt;any('/path', SomeHandler::class, 'route-name');</code></pre>
-<p><code>any()</code> method arguments:</p>
-<ul>
-<li><strong>route path</strong>: required, non-empty string</li>
-<li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
-<li><strong>route name</strong>: optional, if omitted, it will be set to the value of the <strong>route path</strong></li>
-</ul>
-<h2 id="create-a-route-that-responds-to-specific-request-methods">Create a route that responds to specific request methods</h2>
-<pre class="highlight"><code class="language-php">$routeCollector-&gt;route('/path', SomeHandler::class, 'route-name', ['GET', 'POST']);</code></pre>
+<h3 id="create-a-route-that-matches-specific-request-methods">Create a route that matches specific request methods</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;route('/resource/manage', SomeHandler::class, 'route-name', ['GET', 'POST']);</code></pre>
 <p><code>route()</code> method arguments:</p>
 <ul>
-<li><strong>route path</strong>: required, non-empty string</li>
+<li><strong>path</strong>: required, of type string</li>
 <li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
-<li><strong>route name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^METHOD1:METHOD2</li>
-<li><strong>allowed methods</strong>: optional, if omitted, the route will respond to all request methods (equivalent of <code>any()</code>)</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^METHOD1:METHOD2</li>
+<li><strong>methods</strong>: optional, if omitted, the route will respond to all request methods</li>
 </ul>
-<h2 id="create-a-route-that-responds-to-delete-requests">Create a route that responds to <strong>DELETE</strong> requests</h2>
-<pre class="highlight"><code class="language-php">$routeCollector-&gt;delete('/path', SomeHandler::class, 'route-name');</code></pre>
+<h3 id="create-a-route-that-matches-any-request-method">Create a route that matches any request method</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;any('/resource/manage', SomeHandler::class, 'route-name');</code></pre>
+<p><code>any()</code> method arguments:</p>
+<ul>
+<li><strong>path</strong>: required, of type string</li>
+<li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
+<li><strong>name</strong>: optional, if omitted, it will be set to the value of the <strong>route path</strong></li>
+</ul>
+<h3 id="create-a-route-that-matches-delete-requests">Create a route that matches <strong>DELETE</strong> requests</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;delete('/resource/{id}', SomeHandler::class, 'route-name');</code></pre>
 <p><code>delete()</code> method arguments:</p>
 <ul>
-<li><strong>route path</strong>: required, non-empty string</li>
+<li><strong>path</strong>: required, of type string</li>
 <li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
-<li><strong>route name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^DELETE</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^DELETE</li>
 </ul>
-<h2 id="create-a-route-that-responds-to-get-requests">Create a route that responds to <strong>GET</strong> requests</h2>
-<pre class="highlight"><code class="language-php">$routeCollector-&gt;get('/path', SomeHandler::class, 'route-name');</code></pre>
+<h3 id="create-a-route-that-matches-get-requests">Create a route that matches <strong>GET</strong> requests</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;get('/resource/{id}', SomeHandler::class, 'route-name');</code></pre>
 <p><code>get()</code> method arguments:</p>
 <ul>
-<li><strong>route path</strong>: required, non-empty string</li>
+<li><strong>path</strong>: required, of type string</li>
 <li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
-<li><strong>route name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^GET</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^GET</li>
 </ul>
-<h2 id="create-a-route-that-responds-to-patch-requests">Create a route that responds to <strong>PATCH</strong> requests</h2>
-<pre class="highlight"><code class="language-php">$routeCollector-&gt;patch('/path', SomeHandler::class, 'route-name');</code></pre>
+<h3 id="create-a-route-that-matches-patch-requests">Create a route that matches <strong>PATCH</strong> requests</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;patch('/resource/{id}', SomeHandler::class, 'route-name');</code></pre>
 <p><code>patch()</code> method arguments:</p>
 <ul>
-<li><strong>route path</strong>: required, non-empty string</li>
+<li><strong>path</strong>: required, of type string</li>
 <li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
-<li><strong>route name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^PATCH</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^PATCH</li>
 </ul>
-<h2 id="create-a-route-that-responds-to-post-requests">Create a route that responds to <strong>POST</strong> requests</h2>
-<pre class="highlight"><code class="language-php">$routeCollector-&gt;post('/path', SomeHandler::class, 'route-name');</code></pre>
+<h3 id="create-a-route-that-matches-post-requests">Create a route that matches <strong>POST</strong> requests</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;post('/resource', SomeHandler::class, 'route-name');</code></pre>
 <p><code>post()</code> method arguments:</p>
 <ul>
-<li><strong>route path</strong>: required, non-empty string</li>
+<li><strong>path</strong>: required, of type string</li>
 <li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
-<li><strong>route name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^POST</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^POST</li>
 </ul>
-<h2 id="create-a-route-that-responds-to-put-requests">Create a route that responds to <strong>PUT</strong> requests</h2>
-<pre class="highlight"><code class="language-php">$routeCollector-&gt;put('/path', SomeHandler::class, 'route-name');</code></pre>
+<h3 id="create-a-route-that-matches-put-requests">Create a route that matches <strong>PUT</strong> requests</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;put('/resource/{id}', SomeHandler::class, 'route-name');</code></pre>
 <p><code>put()</code> method arguments:</p>
 <ul>
-<li><strong>route path</strong>: required, non-empty string</li>
+<li><strong>path</strong>: required, of type string</li>
 <li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
-<li><strong>route name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^PUT</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^PUT</li>
 </ul>
+<h2 id="chain-routes-to-the-routecollector">Chain routes to the RouteCollector</h2>
+<p>In order to facilitate creating routes, each <code>$routeCollector</code> method returns the existing <code>RouteCollector</code> instance, so you can chain routes like this:</p>
+<pre class="highlight"><code class="language-php">$routeCollector
+    -&gt;route('/product', SomeHandler::class, 'app::product', ['GET', 'POST'])
+    -&gt;any('/category', SomeHandler::class, 'app::category')
+    -&gt;delete('/order/{id}', SomeHandler::class, 'app::delete-order')
+    -&gt;get('/order/{id}', SomeHandler::class, 'app::view-order')
+    -&gt;patch('/order/{id}', SomeHandler::class, 'app::update-order')
+    -&gt;post('/order', SomeHandler::class, 'app::create-order')
+    -&gt;put('/order/{id}', SomeHandler::class, 'app::replace-order');</code></pre>
 
 
 

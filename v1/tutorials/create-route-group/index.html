@@ -277,6 +277,17 @@
 
     
     
+        <div class="toc">
+            <h6 class="toc__headline">On this page</h6>
+            <ul class="toc__list">
+            
+                <li class="toc__entry">
+                    <a href="#access-the-routecollector" class="toc__link nav-link">Access the RouteCollector</a>
+                </li>
+            
+            </ul>
+        </div>
+    
 
                     
                 </div>
@@ -296,22 +307,110 @@
 <blockquote>
 <p>Following this tutorial assumes that you already completed the <a href="../../installation/">installation</a> and <a href="../../configuration/">configuration</a> steps.</p>
 </blockquote>
+<h2 id="access-the-routecollector">Access the RouteCollector</h2>
 <p>Get an instance of the <code>Dot\Router\RouteCollector</code> using the below code:</p>
 <pre class="highlight"><code class="language-php">/** @var \Dot\Router\RouteCollectorInterface $routeCollector */
 $routeCollector = $container-&gt;get(\Dot\Router\RouteCollectorInterface::class);</code></pre>
+<h3 id="create-route-group">Create route group</h3>
 <p>Create a route group, by setting the route group prefix and optionally a(n array of) common middleware(s):</p>
-<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/product', SomeMiddleware::class)</code></pre>
-<p>Then start appending routes to the route group by chaining them:</p>
-<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/product', CheckOwnerMiddleware::class)
-    -&gt;delete('/delete/{id}', DeleteProductHandler::class, 'product:delete')
-    -&gt;patch('/update/{id}', UpdateProductHandler::class, 'product:update')
-    -&gt;get('/view/{id}', GetProductHandler::class, 'product:view');</code></pre>
-<p>If some routes don't need to be piped through specific middleware(s), you can exclude it/them at route level:</p>
-<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/product', CheckOwnerMiddleware::class)
-    -&gt;post('/create', CreateProductHandler::class, 'product:create', CheckOwnerMiddleware::class)
-    -&gt;delete('/delete/{id}', DeleteProductHandler::class, 'product:delete')
-    -&gt;patch('/update/{id}', UpdateProductHandler::class, 'product:update')
-    -&gt;get('/view/{id}', GetProductHandler::class, 'product:view');</code></pre>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', SomeMiddleware::class);</code></pre>
+<p><code>group</code> method arguments:</p>
+<ul>
+<li><strong>prefix</strong>: required, a string that will be prepended to each route from the group</li>
+<li><strong>middleware</strong>: optional, (array of) request middleware(s) to execute before the route handler(s)</li>
+</ul>
+<h3 id="append-a-route-that-matches-specific-request-methods">Append a route that matches specific request methods</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;route('/manage', ResourceHandler::class, 'route-name', ['GET', 'POST']);</code></pre>
+<p>If this route does not need to be piped through specific middleware(s), you can specify the fifth argument <code>$excludeMiddleware</code> exclude those middlewares at route level (makes sense when there are multiple routes in a group):</p>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;route('/manage', ResourceHandler::class, 'route-name', ['GET', 'POST'], excludeMiddleware: SomeMiddleware::class);</code></pre>
+<p><code>route()</code> method arguments:</p>
+<ul>
+<li><strong>path</strong>: required, of type string</li>
+<li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^METHOD1:METHOD2</li>
+<li><strong>methods</strong>: optional, if omitted, the route will respond to all request methods (equivalent of <code>any()</code>)</li>
+<li><strong>excludeMiddleware</strong>: optional, (array of) request handler(s)/middleware(s) to exclude for this route</li>
+</ul>
+<h3 id="append-a-route-that-matches-any-request-method">Append a route that matches any request method</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;any('/manage', ResourceHandler::class, 'route-name');</code></pre>
+<p>If this route does not need to be piped through specific middleware(s), you can specify the fourth argument <code>$excludeMiddleware</code> exclude those middlewares at route level (makes sense when there are multiple routes in a group):</p>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;any('/manage', ResourceHandler::class, 'route-name', excludeMiddleware: SomeMiddleware::class);</code></pre>
+<p><code>any()</code> method arguments:</p>
+<ul>
+<li><strong>path</strong>: required, of type string</li>
+<li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
+<li><strong>name</strong>: optional, if omitted, it will be set to the value of the <strong>route path</strong></li>
+<li><strong>excludeMiddleware</strong>: optional, (array of) request handler(s)/middleware(s) to exclude for this route</li>
+</ul>
+<h3 id="append-a-route-that-matches-delete-requests">Append a route that matches <strong>DELETE</strong> requests</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;delete('/{id}', ResourceHandler::class, 'route-name');</code></pre>
+<p>If this route does not need to be piped through specific middleware(s), you can specify the fourth argument <code>$excludeMiddleware</code> exclude those middlewares at route level (makes sense when there are multiple routes in a group):</p>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;delete('/{id}', ResourceHandler::class, 'route-name', excludeMiddleware: SomeMiddleware::class);</code></pre>
+<p><code>delete()</code> method arguments:</p>
+<ul>
+<li><strong>path</strong>: required, of type string</li>
+<li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^DELETE</li>
+<li><strong>excludeMiddleware</strong>: optional, (array of) request handler(s)/middleware(s) to exclude for this route</li>
+</ul>
+<h3 id="append-a-route-that-matches-get-requests">Append a route that matches <strong>GET</strong> requests</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;get('/{id}', ResourceHandler::class, 'route-name');</code></pre>
+<p>If this route does not need to be piped through specific middleware(s), you can specify the fourth argument <code>$excludeMiddleware</code> exclude those middlewares at route level (makes sense when there are multiple routes in a group):</p>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;get('/{id}', ResourceHandler::class, 'route-name', excludeMiddleware: SomeMiddleware::class);</code></pre>
+<p><code>get()</code> method arguments:</p>
+<ul>
+<li><strong>path</strong>: required, of type string</li>
+<li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^GET</li>
+<li><strong>excludeMiddleware</strong>: optional, (array of) request handler(s)/middleware(s) to exclude for this route</li>
+</ul>
+<h3 id="append-a-route-that-matches-patch-requests">Append a route that matches <strong>PATCH</strong> requests</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;patch('/{id}', ResourceHandler::class, 'route-name');</code></pre>
+<p>If this route does not need to be piped through specific middleware(s), you can specify the fourth argument <code>$excludeMiddleware</code> exclude those middlewares at route level (makes sense when there are multiple routes in a group):</p>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;patch('/{id}', ResourceHandler::class, 'route-name', excludeMiddleware: SomeMiddleware::class);</code></pre>
+<p><code>patch()</code> method arguments:</p>
+<ul>
+<li><strong>path</strong>: required, of type string</li>
+<li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^PATCH</li>
+<li><strong>excludeMiddleware</strong>: optional, (array of) request handler(s)/middleware(s) to exclude for this route</li>
+</ul>
+<h3 id="append-a-route-that-matches-post-requests">Append a route that matches <strong>POST</strong> requests</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;post('', ResourceHandler::class, 'route-name');</code></pre>
+<p>If this route does not need to be piped through specific middleware(s), you can specify the fourth argument <code>$excludeMiddleware</code> exclude those middlewares at route level (makes sense when there are multiple routes in a group):</p>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;post('', ResourceHandler::class, 'route-name', excludeMiddleware: SomeMiddleware::class);</code></pre>
+<p><code>post()</code> method arguments:</p>
+<ul>
+<li><strong>path</strong>: required, of type string</li>
+<li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^POST</li>
+<li><strong>excludeMiddleware</strong>: optional, (array of) request handler(s)/middleware(s) to exclude for this route</li>
+</ul>
+<h3 id="append-a-route-that-matches-put-requests">Append a route that matches <strong>PUT</strong> requests</h3>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;put('/{id}', ResourceHandler::class, 'route-name');</code></pre>
+<p>If this route does not need to be piped through specific middleware(s), you can specify the fourth argument <code>$excludeMiddleware</code> exclude those middlewares at route level (makes sense when there are multiple routes in a group):</p>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    -&gt;put('/{id}', ResourceHandler::class, 'route-name', excludeMiddleware: SomeMiddleware::class);</code></pre>
+<p><code>put()</code> method arguments:</p>
+<ul>
+<li><strong>path</strong>: required, of type string</li>
+<li><strong>middleware</strong>: required, (array of) request handler(s)/middleware(s)</li>
+<li><strong>name</strong>: optional, if omitted, it will be set using the pattern <strong>route path</strong>^PUT</li>
+<li><strong>excludeMiddleware</strong>: optional, (array of) request handler(s)/middleware(s) to exclude for this route</li>
+</ul>
 
 
 

@@ -7,7 +7,7 @@ Dotkernel component to build complex routes, based on [mezzio/mezzio-fastroute](
 ## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/dot-router)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-router/1.0.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-router/1.1.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/dot-router)](https://github.com/dotkernel/dot-router/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/dot-router)](https://github.com/dotkernel/dot-router/network)

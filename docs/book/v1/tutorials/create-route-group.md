@@ -11,9 +11,9 @@ Get an instance of the `Dot\Router\RouteCollector` using the below code:
 $routeCollector = $container->get(\Dot\Router\RouteCollectorInterface::class);
 ```
 
-### Create route group
+### Create a route group
 
-Create a route group, by setting the route group prefix and optionally a(n array of) common middleware(s):
+Create a route group by setting the route group prefix and optionally a(n array of) common middleware(s):
 
 ```php
 $routeCollector->group('/resource', SomeMiddleware::class);
@@ -42,9 +42,9 @@ $routeCollector->group('/resource', [SomeMiddleware::class, OtherMiddleware::cla
 
 - **path**: required, of type string
 - **middleware**: required, (array of) request handler(s)/middleware(s)
-- **name**: optional, if omitted, it will be set using the pattern **route path**^METHOD1:METHOD2
-- **methods**: optional, if omitted, the route will respond to all request methods (equivalent of `any()`)
-- **excludeMiddleware**: optional, (array of) request handler(s)/middleware(s) to exclude for this route
+- **name**: (optional) if omitted, it will be set using the pattern **route path**^METHOD1:METHOD2
+- **methods**: (optional) if omitted, the route will respond to all request methods (equivalent of `any()`)
+- **excludeMiddleware**: (optional) (array of) request handler(s)/middleware(s) to exclude for this route
 
 ### Append a route that matches any request method
 

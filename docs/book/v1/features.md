@@ -14,7 +14,7 @@ $app->get('/product/view/{id}', GetProductHandler::class, 'product:view');
 
 Besides the features provided by `mezzio/mezzio-fastroute`, `dot-router` offers route groups, which are collections of routes that (partially) share the same path.
 
-In order to use this feature, first get an instance of the `Dot\Router\RouteCollector` using the below code:
+To use this feature, first get an instance of the `Dot\Router\RouteCollector` using the below code:
 
 ```php
 /** @var \Dot\Router\RouteCollectorInterface $routeCollector */
@@ -36,10 +36,10 @@ When `dot-router` registers the routes, it will automatically prepend the prefix
 
 ### Advantages
 
-- DRY - no need for repeating common route parts
-- encapsulation - similar routes are grouped in a single block of code (vs each route a separate statement)
-- easy path refactoring - modify all routes at once by changing only the prefix
-- easy copying/moving - copying/moving an entire group makes sure that you don't accidentally omit a route
+- DRY: no need for repeating common route parts
+- encapsulation: similar routes are grouped in a single block of code (vs. each route a separate statement)
+- easy path refactoring: modify all routes at once by changing only the prefix
+- easy copying/moving: copying/moving an entire group makes sure that you don't accidentally omit a route
 
 ## Exclude middleware
 
@@ -55,7 +55,7 @@ $app->get('/product/view/{id}', [CheckOwnerMiddleware::class, GetProductHandler:
 
 Just like in the first example, the routes are similar but this time there is `CheckOwnerMiddleware`, a middleware used by three out of the four routes.
 
-For such cases, `dot-router` provides for specific routes the ability to exclude a middleware from their pipeline.
+For such cases, `dot-router` provides for specific routes the ability to exclude middleware from their pipeline.
 
 Using this feature, we can rewrite the above example like this:
 

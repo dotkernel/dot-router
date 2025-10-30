@@ -21,8 +21,8 @@ $routeCollector->route('/resource/manage', SomeHandler::class, 'route-name', ['G
 
 - **path**: required, of type string
 - **middleware**: required, (array of) request handler(s)/middleware(s)
-- **name**: optional, if omitted, it will be set using the pattern **route path**^METHOD1:METHOD2
-- **methods**: optional, if omitted, the route will respond to all request methods
+- **name**: (optional) if omitted, it will be set using the pattern **route path**^METHOD1:METHOD2
+- **methods**: (optional) if omitted, the route will respond to all request methods
 
 ### Create a route that matches any request method
 
@@ -98,7 +98,7 @@ $routeCollector->put('/resource/{id}', SomeHandler::class, 'route-name');
 
 ## Chain routes to the RouteCollector
 
-In order to facilitate creating routes, each `$routeCollector` method returns the existing `RouteCollector` instance, so you can chain routes like this:
+To facilitate creating routes, each `$routeCollector` method returns the existing `RouteCollector` instance, so you can chain routes like this:
 
 ```php
 $routeCollector

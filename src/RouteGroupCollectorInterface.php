@@ -70,6 +70,13 @@ interface RouteGroupCollectorInterface
         array|string $excludeMiddleware = [],
     ): RouteGroupCollectorInterface;
 
+    public function query(
+        string $path,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        ?string $name = null,
+        array|string $excludeMiddleware = [],
+    ): RouteGroupCollectorInterface;
+
     /**
      * @return list<Route>
      */

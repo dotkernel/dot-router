@@ -160,6 +160,22 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this;
     }
 
+    public function query(
+        string $path,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        ?string $name = null,
+        array|string $excludeMiddleware = [],
+    ): RouteGroupCollectorInterface {
+        $this->routeCollector->route(
+            $this->preparePath($path),
+            $this->prepareMiddleware($middleware, $excludeMiddleware),
+            ['QUERY'],
+            $name
+        );
+
+        return $this;
+    }
+
     /**
      * @return list<Route>
      */

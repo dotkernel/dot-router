@@ -171,3 +171,24 @@ $routeCollector->group('/resource', [SomeMiddleware::class, OtherMiddleware::cla
 - **middleware**: required, (array of) request handler(s)/middleware(s)
 - **name**: optional, if omitted, it will be set using the pattern **route path**^PUT
 - **excludeMiddleware**: optional, (array of) request handler(s)/middleware(s) to exclude for this route
+
+### Append a route that matches **QUERY** requests
+
+```php
+$routeCollector->group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    ->query('', ResourceHandler::class, 'route-name');
+```
+
+If this route does not need to be piped through specific middleware(s), you can specify the fourth argument `$excludeMiddleware` exclude those middlewares at route level (makes sense when there are multiple routes in a group):
+
+```php
+$routeCollector->group('/resource', [SomeMiddleware::class, OtherMiddleware::class])
+    ->query('', ResourceHandler::class, 'route-name', excludeMiddleware: SomeMiddleware::class);
+```
+
+`query()` method arguments:
+
+- **path**: required, of type string
+- **middleware**: required, (array of) request handler(s)/middleware(s)
+- **name**: optional, if omitted, it will be set using the pattern **route path**^QUERY
+- **excludeMiddleware**: optional, (array of) request handler(s)/middleware(s) to exclude for this route

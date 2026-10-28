@@ -117,6 +117,21 @@ class RouteCollector implements RouteCollectorInterface
         return $this;
     }
 
+    public function query(
+        string $path,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        ?string $name = null,
+    ): RouteCollectorInterface {
+        $this->routeCollector->route(
+            $path,
+            $this->middlewareFactory->prepare($middleware),
+            ['QUERY'],
+            $name
+        );
+
+        return $this;
+    }
+
     /**
      * @return list<Route>
      */

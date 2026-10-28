@@ -58,6 +58,12 @@ interface RouteCollectorInterface
         ?string $name = null,
     ): RouteCollectorInterface;
 
+    public function query(
+        string $path,
+        string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
+        ?string $name = null,
+    ): RouteCollectorInterface;
+
     /**
      * @return list<Route>
      */

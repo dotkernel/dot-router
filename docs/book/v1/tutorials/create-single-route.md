@@ -96,6 +96,18 @@ $routeCollector->put('/resource/{id}', SomeHandler::class, 'route-name');
 - **middleware**: required, (array of) request handler(s)/middleware(s)
 - **name**: optional, if omitted, it will be set using the pattern **route path**^PUT
 
+### Create a route that matches **QUERY** requests
+
+```php
+$routeCollector->query('/resource', SomeHandler::class, 'route-name');
+```
+
+`query()` method arguments:
+
+- **path**: required, of type string
+- **middleware**: required, (array of) request handler(s)/middleware(s)
+- **name**: optional, if omitted, it will be set using the pattern **route path**^QUERY
+
 ## Chain routes to the RouteCollector
 
 To facilitate creating routes, each `$routeCollector` method returns the existing `RouteCollector` instance, so you can chain routes like this:
@@ -108,5 +120,6 @@ $routeCollector
     ->get('/order/{id}', SomeHandler::class, 'app::view-order')
     ->patch('/order/{id}', SomeHandler::class, 'app::update-order')
     ->post('/order', SomeHandler::class, 'app::create-order')
-    ->put('/order/{id}', SomeHandler::class, 'app::replace-order');
+    ->put('/order/{id}', SomeHandler::class, 'app::replace-order')
+    ->query('/order', SomeHandler::class, 'app::search-order');
 ```

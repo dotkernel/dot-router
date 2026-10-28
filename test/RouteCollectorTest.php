@@ -194,6 +194,22 @@ class RouteCollectorTest extends TestCase
                 'generatedName'  => 'app::put',
                 'allowedMethods' => ['PUT'],
             ],
+            [
+                'requestMethod'  => 'query',
+                'routePath'      => '/query',
+                'routeName'      => null,
+                'generatedPath'  => '/query',
+                'generatedName'  => '/query^QUERY',
+                'allowedMethods' => ['QUERY'],
+            ],
+            [
+                'requestMethod'  => 'query',
+                'routePath'      => '/query',
+                'routeName'      => 'app::query',
+                'generatedPath'  => '/query',
+                'generatedName'  => 'app::query',
+                'allowedMethods' => ['QUERY'],
+            ],
         ];
     }
 

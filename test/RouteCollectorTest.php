@@ -4,224 +4,195 @@ declare(strict_types=1);
 
 namespace DotTest\Router;
 
-use Dot\Router\MiddlewareFactory;
 use Dot\Router\RouteCollector;
 use Dot\Router\RouteGroupCollector;
-use Mezzio\Router\RouterInterface;
-use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use DotTest\Router\Fixture\FirstMiddleware;
+use DotTest\Router\Fixture\SecondMiddleware;
+use DotTest\Router\Fixture\TestHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class RouteCollectorTest extends TestCase
+use function strtoupper;
+
+final class RouteCollectorTest extends AbstractRouterTestCase
 {
-    protected RouteCollector $routeCollector;
-    protected RequestHandlerInterface $handler;
+    private RouteCollector $routeCollector;
 
-    /**
-     * @throws Exception
-     */
-    protected function setup(): void
+    protected function setUp(): void
     {
-        $this->routeCollector = new RouteCollector(
-            new \Mezzio\Router\RouteCollector($this->createMock(RouterInterface::class)),
-            $this->createMock(MiddlewareFactory::class)
-        );
+        parent::setUp();
+
+        $this->routeCollector = new RouteCollector($this->mezzioCollector, $this->middlewareFactory);
     }
 
     public function testWillCreateGroup(): void
     {
-        $group = $this->routeCollector->group('/group', MiddlewareInterface::class);
+        $group = $this->routeCollector->group('/group', FirstMiddleware::class);
+
         $this->assertInstanceOf(RouteGroupCollector::class, $group);
         $this->assertSame('/group', $group->getPrefix());
-        $this->assertSame(MiddlewareInterface::class, $group->getMiddleware());
+        $this->assertSame(FirstMiddleware::class, $group->getMiddleware());
+    }
+
+    public function testGroupMiddlewareIsOptional(): void
+    {
+        $group = $this->routeCollector->group('/group');
+
+        $this->assertNull($group->getMiddleware());
+
+        $group->get('/x', TestHandler::class, 'x');
+        $this->assertSame([TestHandler::class], $this->runRoute($this->routeNamed('x')));
+    }
+
+    public function testEachGroupIsANewInstance(): void
+    {
+        $first  = $this->routeCollector->group('/first');
+        $second = $this->routeCollector->group('/second');
+
+        $this->assertNotSame($first, $second);
+        $this->assertSame('/first', $first->getPrefix());
+    }
+
+    public function testRouteRunsMiddlewareInOrder(): void
+    {
+        $this->routeCollector->get(
+            '/x',
+            [FirstMiddleware::class, new SecondMiddleware(), TestHandler::class],
+            'x'
+        );
+
+        $this->assertSame(
+            [FirstMiddleware::class, SecondMiddleware::class, TestHandler::class],
+            $this->runRoute($this->routeNamed('x'))
+        );
     }
 
     /**
-     * @dataProvider routeProvider
+     * @param non-empty-string $routePath
+     * @param non-empty-string|null $routeName
+     * @param list<string>|null $allowedMethods
      */
+    #[DataProvider('routeProvider')]
     public function testWillCreateRoute(
         string $routePath,
-        ?string $routeName = null,
-        ?string $generatedPath = null,
-        ?string $generatedName = null,
-        ?array $allowedMethods = null,
+        ?string $routeName,
+        string $generatedPath,
+        string $generatedName,
+        ?array $allowedMethods,
     ): void {
         $this->assertCount(0, $this->routeCollector->getRoutes());
 
-        $route = $this->routeCollector->route(
-            $routePath,
-            RequestHandlerInterface::class,
-            $routeName,
-            $allowedMethods
-        );
-        $this->assertInstanceOf(RouteCollector::class, $route);
-
+        $result = $this->routeCollector->route($routePath, TestHandler::class, $routeName, $allowedMethods);
+        $this->assertSame($this->routeCollector, $result);
         $this->assertCount(1, $this->routeCollector->getRoutes());
 
         $route = $this->routeCollector->getRoutes()[0];
         $this->assertSame($generatedPath, $route->getPath());
-        $this->assertContainsOnlyInstancesOf(MiddlewareInterface::class, [$route->getMiddleware()]);
         $this->assertSame($generatedName, $route->getName());
         $this->assertSame($allowedMethods, $route->getAllowedMethods());
+        $this->assertSame([TestHandler::class], $this->runRoute($route));
     }
 
     /**
-     * @dataProvider methodProvider
+     * @param 'any'|'delete'|'get'|'patch'|'post'|'put' $requestMethod
+     * @param non-empty-string $routePath
+     * @param non-empty-string|null $routeName
+     * @param list<string>|null $allowedMethods
      */
+    #[DataProvider('methodProvider')]
     public function testWillCreateRoutesByMethod(
         string $requestMethod,
         string $routePath,
-        ?string $routeName = null,
-        ?string $generatedPath = null,
-        ?string $generatedName = null,
-        ?array $allowedMethods = null,
+        ?string $routeName,
+        string $generatedPath,
+        string $generatedName,
+        ?array $allowedMethods,
     ): void {
         $this->assertCount(0, $this->routeCollector->getRoutes());
 
-        $route = $this->routeCollector->$requestMethod(
-            $routePath,
-            RequestHandlerInterface::class,
-            $routeName,
-        );
-        $this->assertInstanceOf(RouteCollector::class, $route);
-
+        $result = $this->routeCollector->$requestMethod($routePath, TestHandler::class, $routeName);
+        $this->assertSame($this->routeCollector, $result);
         $this->assertCount(1, $this->routeCollector->getRoutes());
 
         $route = $this->routeCollector->getRoutes()[0];
         $this->assertSame($generatedPath, $route->getPath());
-        $this->assertContainsOnlyInstancesOf(MiddlewareInterface::class, [$route->getMiddleware()]);
         $this->assertSame($generatedName, $route->getName());
         $this->assertSame($allowedMethods, $route->getAllowedMethods());
+        $this->assertSame([TestHandler::class], $this->runRoute($route));
     }
 
+    /**
+     * @return array<string, array{
+     *     requestMethod: 'any'|'delete'|'get'|'patch'|'post'|'put',
+     *     routePath: non-empty-string,
+     *     routeName: non-empty-string|null,
+     *     generatedPath: string,
+     *     generatedName: string,
+     *     allowedMethods: list<string>|null,
+     * }>
+     */
     public static function methodProvider(): array
     {
-        return [
-            [
-                'requestMethod'  => 'any',
-                'routePath'      => '/any',
+        $cases = [];
+        foreach (['any', 'delete', 'get', 'patch', 'post', 'put'] as $method) {
+            $path    = '/' . $method;
+            $methods = $method === 'any' ? null : [strtoupper($method)];
+            $default = $methods === null ? $path : $path . '^' . strtoupper($method);
+
+            $cases[$method . ' without name'] = [
+                'requestMethod'  => $method,
+                'routePath'      => $path,
                 'routeName'      => null,
-                'generatedPath'  => '/any',
-                'generatedName'  => '/any',
-                'allowedMethods' => null,
-            ],
-            [
-                'requestMethod'  => 'any',
-                'routePath'      => '/any',
-                'routeName'      => 'app::any',
-                'generatedPath'  => '/any',
-                'generatedName'  => 'app::any',
-                'allowedMethods' => null,
-            ],
-            [
-                'requestMethod'  => 'delete',
-                'routePath'      => '/delete',
-                'routeName'      => null,
-                'generatedPath'  => '/delete',
-                'generatedName'  => '/delete^DELETE',
-                'allowedMethods' => ['DELETE'],
-            ],
-            [
-                'requestMethod'  => 'delete',
-                'routePath'      => '/delete',
-                'routeName'      => 'app::delete',
-                'generatedPath'  => '/delete',
-                'generatedName'  => 'app::delete',
-                'allowedMethods' => ['DELETE'],
-            ],
-            [
-                'requestMethod'  => 'get',
-                'routePath'      => '/get',
-                'routeName'      => null,
-                'generatedPath'  => '/get',
-                'generatedName'  => '/get^GET',
-                'allowedMethods' => ['GET'],
-            ],
-            [
-                'requestMethod'  => 'get',
-                'routePath'      => '/get',
-                'routeName'      => 'app::get',
-                'generatedPath'  => '/get',
-                'generatedName'  => 'app::get',
-                'allowedMethods' => ['GET'],
-            ],
-            [
-                'requestMethod'  => 'patch',
-                'routePath'      => '/patch',
-                'routeName'      => null,
-                'generatedPath'  => '/patch',
-                'generatedName'  => '/patch^PATCH',
-                'allowedMethods' => ['PATCH'],
-            ],
-            [
-                'requestMethod'  => 'patch',
-                'routePath'      => '/patch',
-                'routeName'      => 'app::patch',
-                'generatedPath'  => '/patch',
-                'generatedName'  => 'app::patch',
-                'allowedMethods' => ['PATCH'],
-            ],
-            [
-                'requestMethod'  => 'post',
-                'routePath'      => '/post',
-                'routeName'      => null,
-                'generatedPath'  => '/post',
-                'generatedName'  => '/post^POST',
-                'allowedMethods' => ['POST'],
-            ],
-            [
-                'requestMethod'  => 'post',
-                'routePath'      => '/post',
-                'routeName'      => 'app::post',
-                'generatedPath'  => '/post',
-                'generatedName'  => 'app::post',
-                'allowedMethods' => ['POST'],
-            ],
-            [
-                'requestMethod'  => 'put',
-                'routePath'      => '/put',
-                'routeName'      => null,
-                'generatedPath'  => '/put',
-                'generatedName'  => '/put^PUT',
-                'allowedMethods' => ['PUT'],
-            ],
-            [
-                'requestMethod'  => 'put',
-                'routePath'      => '/put',
-                'routeName'      => 'app::put',
-                'generatedPath'  => '/put',
-                'generatedName'  => 'app::put',
-                'allowedMethods' => ['PUT'],
-            ],
-        ];
+                'generatedPath'  => $path,
+                'generatedName'  => $default,
+                'allowedMethods' => $methods,
+            ];
+            $cases[$method . ' with name']    = [
+                'requestMethod'  => $method,
+                'routePath'      => $path,
+                'routeName'      => 'app::' . $method,
+                'generatedPath'  => $path,
+                'generatedName'  => 'app::' . $method,
+                'allowedMethods' => $methods,
+            ];
+        }
+
+        return $cases;
     }
 
+    /**
+     * @return array<string, array{
+     *     routePath: non-empty-string,
+     *     routeName: non-empty-string|null,
+     *     generatedPath: string,
+     *     generatedName: string,
+     *     allowedMethods: list<string>|null,
+     * }>
+     */
     public static function routeProvider(): array
     {
         return [
-            [
+            'any method, no name'    => [
                 'routePath'      => '/route',
                 'routeName'      => null,
                 'generatedPath'  => '/route',
                 'generatedName'  => '/route',
                 'allowedMethods' => null,
             ],
-            [
+            'two methods, no name'   => [
                 'routePath'      => '/route',
                 'routeName'      => null,
                 'generatedPath'  => '/route',
                 'generatedName'  => '/route^DELETE:GET',
                 'allowedMethods' => ['DELETE', 'GET'],
             ],
-            [
+            'any method, with name'  => [
                 'routePath'      => '/route',
                 'routeName'      => 'app::name',
                 'generatedPath'  => '/route',
                 'generatedName'  => 'app::name',
                 'allowedMethods' => null,
             ],
-            [
+            'two methods, with name' => [
                 'routePath'      => '/route',
                 'routeName'      => 'app::name',
                 'generatedPath'  => '/route',

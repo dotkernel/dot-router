@@ -2,9 +2,10 @@
 
 ## Supported Versions
 
-| Version | Supported          | PHP Version                                                                                             |
-|---------|--------------------|---------------------------------------------------------------------------------------------------------|
-| 1.x     | :white_check_mark: | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-cli/1.1.0) |
+| Version | Supported                          | PHP Version                                                                                                |
+|---------|------------------------------------|------------------------------------------------------------------------------------------------------------|
+| 2.x     | :white_check_mark:                 | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-router/2.0.0) |
+| 1.x     | :white_check_mark: (security only) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/dot-router/1.1.0) |
 
 ## Reporting Potential Security Issues
 
@@ -25,4 +26,3 @@ If we verify a reported security vulnerability, our policy is:
 
 - We will patch the current release branch, as well as the immediate prior minor release branch.
 - After patching the release branches, we will immediately issue new security fix releases for each patched release branch.
-

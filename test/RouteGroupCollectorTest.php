@@ -8,6 +8,7 @@ use Dot\Router\MiddlewareFactory;
 use Dot\Router\RouteGroupCollector;
 use Mezzio\Router\RouteCollector;
 use Mezzio\Router\RouterInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\MiddlewareInterface;
@@ -24,8 +25,8 @@ class RouteGroupCollectorTest extends TestCase
     protected function setup(): void
     {
         $this->routeGroupCollector = new RouteGroupCollector(
-            new RouteCollector($this->createMock(RouterInterface::class)),
-            $this->createMock(MiddlewareFactory::class)
+            new RouteCollector($this->createStub(RouterInterface::class)),
+            $this->createStub(MiddlewareFactory::class)
         );
     }
 
@@ -36,9 +37,7 @@ class RouteGroupCollectorTest extends TestCase
         $this->assertSame(MiddlewareInterface::class, $group->getMiddleware());
     }
 
-    /**
-     * @dataProvider routeProvider
-     */
+    #[DataProvider('routeProvider')]
     public function testWillCreateRoute(
         string $groupPrefix,
         string $routePath,
@@ -71,9 +70,7 @@ class RouteGroupCollectorTest extends TestCase
         $this->assertSame($allowedMethods, $route->getAllowedMethods());
     }
 
-    /**
-     * @dataProvider methodProvider
-     */
+    #[DataProvider('methodProvider')]
     public function testWillCreateRoutesByMethod(
         string $groupPrefix,
         string $requestMethod,

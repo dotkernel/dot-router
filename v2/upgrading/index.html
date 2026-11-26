@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="description" content="Dotkernel component to build complex routes, based on mezzio/mezzio-fastroute">
+        
+        
+
+        
+        
+            
+        
+        <meta name="docsearch:version" content="2.0.0,latest">
+        <meta name="docsearch:language" content="en">
+        <meta name="docsearch:component" content="dot-router">
+
+        <meta property="og:title"        content="Dotkernel Documentation"/>
+        <meta property="og:description"  content="Official Dotkernel documentation covering APIs, Admin, Queue, developer tools, packages, and modern PHP application development"/>
+        <meta property="og:image"        content="https://docs.dotkernel.org/img/open-graph/twitter-card-docs.png"/>
+        <meta property="og:type"         content="website"/>
+        <meta property="og:site_name"    content="Dotkernel Documentation"/>
+        <meta property="og:url"          content="https://docs.dotkernel.org/"/>
+        <meta property="og:locale"       content="en_US"/>
+        <meta name="twitter:card"        content="summary_large_image"/>
+        <meta name="twitter:site"        content="@dotkernel"/>
+        <meta name="twitter:title"       content="Dotkernel Documentation"/>
+        <meta name="twitter:description" content="Official Dotkernel documentation covering APIs, Admin, Queue, developer tools, packages, and modern PHP application development"/>
+        <meta name="twitter:image"       content="https://docs.dotkernel.org/img/open-graph/twitter-card-docs.png"/>
+
+        
+        <link rel="canonical" href="https://docs.dotkernel.org/dot-router/v2/upgrading/">
+        
+        <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_docs_favicon_white.svg">
+
+        <title>Upgrading from v1 - dot-router - Dotkernel Documentation</title>
+
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap.css">
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/docs.css">
+        <script src="https://docs.dotkernel.org/js/bootstrap.js" defer></script>
+        <script src="https://docs.dotkernel.org/js/docs.js" defer></script>
+        <script src="https://docs.dotkernel.org/js/scripts.js" defer></script>
+    </head>
+    <body data-bs-spy="scroll" data-bs-target=".toc" data-bs-offset="100">
+
+        
+        <nav class="navbar navbar-expand-lg dk-docs-nav py-2" data-bs-theme="dark">
+    <div class="container-fluid dk-docs-nav__inner">
+        <a class="navbar-brand dk-docs-nav__brand" href="https://docs.dotkernel.org/">
+            <img alt="Dotkernel" class="d-inline-block align-text-top" height="28"
+                 src="https://docs.dotkernel.org/img/dk_logo_2024_white.svg" width="152"/>
+        </a>
+
+        <ul class="dk-docs-nav__projects list-unstyled d-none d-lg-flex align-items-center mb-0">
+            
+            <li class="">
+                <a href="https://docs.dotkernel.org/api-documentation/">API</a>
+            </li>
+            
+            <li class="">
+                <a href="https://docs.dotkernel.org/admin-documentation/">Admin</a>
+            </li>
+            
+            <li class="">
+                <a href="https://docs.dotkernel.org/frontend-documentation/">Frontend</a>
+            </li>
+            
+            <li class="">
+                <a href="https://docs.dotkernel.org/light-documentation/">Light</a>
+            </li>
+            
+            <li class="">
+                <a href="https://docs.dotkernel.org/queue-documentation/">Queue</a>
+            </li>
+            
+            <li class="dk-docs-nav__projects-item--active">
+                <a href="https://docs.dotkernel.org/packages/">Packages</a>
+            </li>
+            
+            <li class="">
+                <a href="https://docs.dotkernel.org/development/">Development</a>
+            </li>
+            
+            <li class="">
+                <a href="https://docs.dotkernel.org/headless-documentation/">Headless Platform</a>
+            </li>
+            
+            <li class="">
+                <a href="https://docs.dotkernel.org/dotboost/">Dotboost</a>
+            </li>
+            
+        </ul>
+
+        <div class="flex-grow-1"></div>
+
+        <a href="#" class="dk-docs-nav__search d-none d-md-flex align-items-center" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal" title="Open search">
+            <i class="bi bi-search"></i>
+            <span>Search docs</span>
+            <span class="dk-docs-nav__search-key">/</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse flex-grow-0" id="navbarText">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 dk-docs-nav__projects dk-docs-nav__projects--collapsed d-lg-none">
+                
+                <li class="">
+                    <a href="https://docs.dotkernel.org/api-documentation/">API</a>
+                </li>
+                
+                <li class="">
+                    <a href="https://docs.dotkernel.org/admin-documentation/">Admin</a>
+                </li>
+                
+                <li class="">
+                    <a href="https://docs.dotkernel.org/frontend-documentation/">Frontend</a>
+                </li>
+                
+                <li class="">
+                    <a href="https://docs.dotkernel.org/light-documentation/">Light</a>
+                </li>
+                
+                <li class="">
+                    <a href="https://docs.dotkernel.org/queue-documentation/">Queue</a>
+                </li>
+                
+                <li class="dk-docs-nav__projects-item--active">
+                    <a href="https://docs.dotkernel.org/packages/">Packages</a>
+                </li>
+                
+                <li class="">
+                    <a href="https://docs.dotkernel.org/development/">Development</a>
+                </li>
+                
+                <li class="">
+                    <a href="https://docs.dotkernel.org/headless-documentation/">Headless Platform</a>
+                </li>
+                
+                <li class="">
+                    <a href="https://docs.dotkernel.org/dotboost/">Dotboost</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link fw-bold text-white" href="https://github.com/dotkernel/dot-router" title="Go to dot-router repository" target="_blank">
+                        <i class="bi bi-github"></i>
+                        GitHub
+                    </a>
+                </li>
+                <li class="nav-item">
+                    
+    
+    <div class="version-selector">
+        <div class="btn-group">
+            <button type="button" class="btn dropdown-toggle bg-light" data-bs-toggle="dropdown" data-bs-display="static" aria-haspopup="true" aria-expanded="false" id="version-selector-dropdown">
+                
+                    v2
+                
+            </button>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="version-selector-dropdown">
+                
+                
+                <a href="../overview/" class="dropdown-item active">
+                    
+                        v2 (latest)
+                    
+                </a>
+                
+                
+                
+                <a href="../../v1/overview/" class="dropdown-item">
+                    
+                        v1
+                    
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+    
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+        
+        <div class="container-fluid docs-shell">
+            <div class="row gx-0">
+                <div class="col-lg-3 col-xl-2 right_sidebar">
+                    
+                    
+    <div class="subnavigation hidden-print">
+<!--        <h4 class="subnavigation__title">-->
+<!--            <a href="../..">dot-router</a>-->
+<!--        </h4>-->
+
+        <h5 class="subnavigation__title">Table of Contents</h5>
+
+        <ul class="subnavigation__list">
+            
+
+                
+                
+                    
+                        
+<li class="subnavigation__list-item ">
+    <a href="../overview/" class="subnavigation__link">Overview</a>
+</li>
+
+                    
+                        
+<li class="subnavigation__list-item ">
+    <a href="../installation/" class="subnavigation__link">Installation</a>
+</li>
+
+                    
+                        
+<li class="subnavigation__list-item ">
+    <a href="../configuration/" class="subnavigation__link">Configuration</a>
+</li>
+
+                    
+                        
+<li class="subnavigation__list-item ">
+    <a href="../features/" class="subnavigation__link">Features</a>
+</li>
+
+                    
+                        
+<li class="subnavigation__list-item ">
+    <a href="../usage/" class="subnavigation__link">Usage</a>
+</li>
+
+                    
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="subnavigation__list-item">
+    <a data-bs-toggle="collapse" href="#tutorials" role="button" class="collapsed" aria-expanded="false" aria-controls="tutorials">
+        <span class="subnavigation__headline">Tutorials</span>
+    </a>
+    <ul class="subnavigation__list collapse" id="tutorials">
+        
+        
+<li class="subnavigation__list-item ">
+    <a href="../tutorials/create-single-route/" class="subnavigation__link">Creating a single route</a>
+</li>
+
+        
+        
+<li class="subnavigation__list-item ">
+    <a href="../tutorials/create-route-group/" class="subnavigation__link">Creating route groups</a>
+</li>
+
+        
+    </ul>
+</li>
+
+                    
+                        
+<li class="subnavigation__list-item subnavigation__list-item--active">
+    <a href="./" class="subnavigation__link">Upgrading from v1</a>
+</li>
+
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                
+            
+        </ul>
+    </div>
+
+                    
+                </div>
+                <div class="col-lg-9 col-xl-8 main_docs">
+                    
+                    <nav aria-label="breadcrumb" class="nav_breadcrumb">
+    <ol class="breadcrumb">
+        
+            <li class="breadcrumb-item"><a href="https://docs.dotkernel.org/">Overview</a></li>
+            
+
+            
+                <li class="breadcrumb-item"><a href="../..">dot-router</a></li>
+
+                
+                    
+                        
+                        
+                    
+                
+
+                <li class="breadcrumb-item active" aria-current="page">Upgrading from v1</li>
+            
+        
+    </ol>
+</nav>
+
+                    
+                    
+
+
+
+
+    
+    
+
+    
+    
+        
+        
+            
+        
+        
+        <div class="md-actions-bar">
+            <div class="md-actions">
+                <button type="button" class="md-actions-toggle" aria-haspopup="true" aria-expanded="false"
+                        onclick="toggleMdActionsMenu(this)">
+                    <span class="md-actions-toggle-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h9l7 7v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M13 4v6h6"/></svg>
+                        <span>Copy Page</span>
+                    </span>
+                    <span class="md-actions-toggle-chev">
+                        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </span>
+                </button>
+                <div class="md-actions-menu" role="menu">
+                    <button type="button" class="md-actions-item" role="menuitem" data-copy-url="../upgrading.md"
+                            onclick="copyMarkdownPage(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+                        <span class="label">Copy Page (as Markdown)</span>
+                    </button>
+                    <a href="../upgrading.md" target="_blank" rel="alternate noopener noreferrer" type="text/markdown"
+                       class="md-actions-item" role="menuitem" title="View the Markdown source of this page">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h9l7 7v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M13 4v6h6"/><path d="M8 15h8M8 11h4"/></svg>
+                        <span class="label">View as Markdown</span>
+                    </a>
+                    <a href="https://claude.ai/new?q=Read%20from%20https%3A//docs.dotkernel.org/dot-router/v2/upgrading.md%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="noopener noreferrer"
+                       class="md-actions-item" role="menuitem" title="Open this page in Claude">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5z"/></svg>
+                        <span class="label">Open in Claude</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+
+    <h1 id="upgrading-from-version-1-to-version-2">Upgrading from version 1 to version 2</h1>
+<p>Version 2 drops PHP 8.2, fixes how group middleware is applied, and makes the middleware container follow PSR-11.
+Most applications only need to update PHP and run <code>composer update</code>; read the table below if your routes use groups with closures or <code>$excludeMiddleware</code>.</p>
+<h2 id="update-the-package">Update the package</h2>
+<pre class="highlight"><code class="language-shell">composer require dotkernel/dot-router:^2.0</code></pre>
+<h2 id="changes-that-can-break-your-code">Changes that can break your code</h2>
+<div class="table-responsive"><table>
+<thead>
+<tr>
+<th>Change</th>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PHP 8.2 support removed</td>
+<td>Composer refuses to install version 2</td>
+<td>Use PHP 8.3 or newer, or stay on version 1</td>
+</tr>
+<tr>
+<td><code>mezzio/mezzio-fastroute</code> minimum is <code>^3.15</code></td>
+<td>Composer reports a conflict with an older FastRoute version</td>
+<td>Update <code>mezzio/mezzio-fastroute</code></td>
+</tr>
+<tr>
+<td>Callable route handlers in a group now run the group middleware</td>
+<td>A closure route inside a group now runs, for example, the group's authentication middleware</td>
+<td>This is usually what you want. To keep the old behaviour, list the group middleware in that route's <code>$excludeMiddleware</code></td>
+</tr>
+<tr>
+<td><code>$excludeMiddleware</code> removes group middleware only</td>
+<td>Listing the route's own handler or middleware class no longer removes it from the route</td>
+<td>Remove the class from the route's middleware list instead</td>
+</tr>
+<tr>
+<td><code>$excludeMiddleware</code> matches middleware objects by class</td>
+<td>A group middleware passed as an object is now excluded by its class name; excluding <code>MiddlewareInterface::class</code> removes every group middleware object, but never the route handler</td>
+<td>Check routes that exclude interface names</td>
+</tr>
+<tr>
+<td><code>MiddlewareContainer::get()</code> throws <code>MissingMiddlewareException</code> or <code>InvalidMiddlewareException</code></td>
+<td>Code that compares the exception class with <code>Exception::class</code> no longer matches</td>
+<td>Catch <code>Psr\Container\ContainerExceptionInterface</code>; both new classes extend <code>RuntimeException</code>, so <code>catch (Exception $e)</code> still works</td>
+</tr>
+<tr>
+<td>An unregistered middleware class with required constructor arguments throws <code>InvalidMiddlewareException</code></td>
+<td>The error was an <code>ArgumentCountError</code></td>
+<td>Register the middleware in the container</td>
+</tr>
+<tr>
+<td><code>MiddlewareFactory::pipeline()</code> and <code>prepare([])</code> reject an empty list</td>
+<td><code>Dot\Router\Exception\InvalidArgumentException</code> when routes are registered; version 1 raised a PHP warning and registered a route that did nothing</td>
+<td>Pass at least one middleware or handler</td>
+</tr>
+<tr>
+<td>A group route with an empty prefix and an empty path is rejected</td>
+<td><code>Dot\Router\Exception\InvalidArgumentException</code></td>
+<td>Set a prefix or a path</td>
+</tr>
+<tr>
+<td>Stricter PHPDoc types (<code>non-empty-string</code> paths and names, <code>list&lt;string&gt;</code> methods)</td>
+<td>Static analysis of your code reports new errors on route calls</td>
+<td>Pass non-empty literals, or narrow your variables before the call</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="group-middleware-with-closures">Group middleware with closures</h2>
+<p>Before, the closure route skipped <code>AuthMiddleware</code>:</p>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/admin', AuthMiddleware::class)
+    -&gt;get('/status', fn ($request, $handler) =&gt; new JsonResponse(['ok' =&gt; true]), 'admin:status');</code></pre>
+<p>After, <code>AuthMiddleware</code> runs first for <code>/admin/status</code>, as it does for every other route in the group.
+To keep the route public, exclude the middleware:</p>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/admin', AuthMiddleware::class)
+    -&gt;get('/status', fn ($request, $handler) =&gt; new JsonResponse(['ok' =&gt; true]), 'admin:status', AuthMiddleware::class);</code></pre>
+<h2 id="excluding-middleware-objects">Excluding middleware objects</h2>
+<p>Before, a group middleware passed as an object could not be excluded by its class name:</p>
+<pre class="highlight"><code class="language-php">$routeCollector-&gt;group('/product', new CheckOwnerMiddleware($repository))
+    -&gt;post('/create', CreateProductHandler::class, 'product:create', CheckOwnerMiddleware::class);
+// version 1: CheckOwnerMiddleware still ran
+// version 2: CheckOwnerMiddleware is skipped for product:create</code></pre>
+
+
+
+
+    <nav>
+    <ul class="list-unstyled page-nav row w-100 mt-5 mb-3 pt-5 pb-3">
+        
+        <li class="col text-nowrap text-md-start">
+            
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../tutorials/create-route-group/">
+                    <i class="bi bi-chevron-left"></i>
+                    Creating route groups
+                </a>
+            
+        </li>
+
+        
+        <li class="col text-nowrap text-md-end pe-0">
+            
+                <a rel="next" class="page-nav__link page-nav__link--next" href="../../v1/overview/">
+                    Overview
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            
+        </li>
+    </ul>
+</nav>
+
+
+
+                    
+                </div>
+
+                
+                
+                <div class="col-xl-2 d-none d-xl-block page_toc">
+                    
+    
+
+    
+    
+        <div class="toc">
+            <h6 class="toc__headline">On this page</h6>
+            <ul class="toc__list">
+            
+                <li class="toc__entry">
+                    <a href="#update-the-package" class="toc__link nav-link">Update the package</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#changes-that-can-break-your-code" class="toc__link nav-link">Changes that can break your code</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#group-middleware-with-closures" class="toc__link nav-link">Group middleware with closures</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#excluding-middleware-objects" class="toc__link nav-link">Excluding middleware objects</a>
+                </li>
+            
+            </ul>
+        </div>
+    
+
+                </div>
+                
+            </div>
+        </div>
+
+        
+        <footer class="dk-home-footer">
+    <div class="dk-home-footer__grid">
+        <div class="dk-home-footer__col">
+            <div class="dk-home-footer__label">Products</div>
+            <a href="https://docs.dotkernel.org/api-documentation/">API</a>
+            <a href="https://docs.dotkernel.org/admin-documentation/">Admin</a>
+            <a href="https://docs.dotkernel.org/queue-documentation/">Queue</a>
+            <a href="https://docs.dotkernel.org/light-documentation/">Light</a>
+        </div>
+        <div class="dk-home-footer__col">
+            <div class="dk-home-footer__label">Resources</div>
+            <a href="https://docs.dotkernel.org/dotboost/">Dotboost</a>
+            <a href="https://docs.dotkernel.org/headless-documentation/">Architecture</a>
+            <a href="https://www.dotkernel.com/dotkernel-packages-oss-lifecycle/">Packages Lifecycle</a>
+            <a href="https://docs.dotkernel.org/development/">WSL2 Dev Stack</a>
+        </div>
+        <div class="dk-home-footer__col">
+            <div class="dk-home-footer__label">More</div>
+            <a href="https://www.dotkernel.com/">Categories</a>
+            <a href="https://www.dotkernel.com/blog/">Blog</a>
+            <a href="https://github.com/orgs/dotkernel/discussions">Discussion</a>
+            <a href="https://www.dotkernel.com/about/">About</a>
+            <a href="https://www.dotkernel.com/contact/">Contact us</a>
+        </div>
+        <div class="dk-home-footer__col">
+            <div class="dk-home-footer__label">Follow</div>
+            <a href="https://github.com/dotkernel" target="_blank">GitHub</a>
+            <a href="https://www.dotkernel.com/feed/" target="_blank">Dotkernel RSS Feed</a>
+            <div class="dk-home-footer__note">Open-source tooling supported by JetBrains.</div>
+        </div>
+    </div>
+
+    <div class="dk-home-footer__bottom">
+        <img src="https://docs.dotkernel.org/img/dk_logo_2024_white.svg" alt="Dotkernel Logo" width="112" height="21" style="opacity:.75" />
+        <div class="dk-home-footer__tagline">Built with Mezzio, Laminas &amp; Doctrine - for PHP developers, by PHP developers. The Laminas logo is copyright of the Laminas Foundation.</div>
+        <div class="flex-grow-1"></div>
+        <div class="dk-home-footer__copyright">&#169; Copyright Dotkernel <span id="current-year"></span>. All rights reserved.</div>
+    </div>
+</footer>
+
+        <script>
+            let base_url = '../..',
+                project  = "packages",
+                siteName = 'dot-router';
+        </script>
+        
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search in dot-router" id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+</html>

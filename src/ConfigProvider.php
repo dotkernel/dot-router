@@ -11,6 +11,11 @@ use Dot\Router\Factory\RouteGroupCollectorFactory;
 
 class ConfigProvider
 {
+    /**
+     * @return array{
+     *     dependencies: array{aliases: array<class-string, class-string>, factories: array<class-string, class-string>}
+     * }
+     */
     public function __invoke(): array
     {
         return [
@@ -18,6 +23,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return array{aliases: array<class-string, class-string>, factories: array<class-string, class-string>}
+     */
     public function getDependencyConfig(): array
     {
         return [

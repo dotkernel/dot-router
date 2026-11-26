@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Dot\Router;
 
-use Exception;
+use ArgumentCountError;
+use Dot\Router\Exception\InvalidMiddlewareException;
+use Dot\Router\Exception\MissingMiddlewareException;
 use Laminas\Stratigility\Middleware\RequestHandlerMiddleware;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -13,9 +15,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 use function class_exists;
-use function gettype;
-use function is_object;
-use function sprintf;
 
 class MiddlewareContainer implements ContainerInterface
 {
@@ -34,32 +33,33 @@ class MiddlewareContainer implements ContainerInterface
     }
 
     /**
+     * @throws MissingMiddlewareException
+     * @throws InvalidMiddlewareException
      * @throws ContainerExceptionInterface
-     * @throws Exception
      * @throws NotFoundExceptionInterface
      */
     public function get(string $id): MiddlewareInterface
     {
         if (! $this->has($id)) {
-            throw new Exception(sprintf(
-                'Cannot fetch middleware service "%s"; service not registered,'
-                . ' or does not resolve to an autoloadable class name',
-                $id
-            ));
+            throw MissingMiddlewareException::forService($id);
         }
 
-        $middleware = $this->container->has($id) ? $this->container->get($id) : new $id();
+        if ($this->container->has($id)) {
+            $middleware = $this->container->get($id);
+        } else {
+            try {
+                $middleware = new $id();
+            } catch (ArgumentCountError $exception) {
+                throw InvalidMiddlewareException::notInstantiable($id, $exception);
+            }
+        }
+
         if ($middleware instanceof RequestHandlerInterface && ! $middleware instanceof MiddlewareInterface) {
             $middleware = new RequestHandlerMiddleware($middleware);
         }
 
         if (! $middleware instanceof MiddlewareInterface) {
-            throw new Exception(sprintf(
-                'Service "%s" did not to resolve to a %s instance; resolved to "%s"',
-                $id,
-                MiddlewareInterface::class,
-                is_object($middleware) ? $middleware::class : gettype($middleware)
-            ));
+            throw InvalidMiddlewareException::forService($id, $middleware);
         }
 
         return $middleware;

@@ -17,11 +17,12 @@ use Dot\Router\RouteGroupCollector;
 use Dot\Router\RouteGroupCollectorInterface;
 use PHPUnit\Framework\TestCase;
 
-class ConfigProviderTest extends TestCase
+final class ConfigProviderTest extends TestCase
 {
-    protected array $config;
+    /** @var array{dependencies: array{aliases: array<class-string, class-string>, factories: array<class-string, class-string>}} */
+    private array $config;
 
-    protected function setup(): void
+    protected function setUp(): void
     {
         $this->config = (new ConfigProvider())();
     }

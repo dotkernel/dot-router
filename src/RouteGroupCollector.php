@@ -4,28 +4,32 @@ declare(strict_types=1);
 
 namespace Dot\Router;
 
+use Dot\Router\Exception\InvalidArgumentException;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteCollectorInterface as MezzioRouteCollectorInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 use function array_filter;
-use function array_merge;
+use function array_values;
 use function in_array;
-use function is_array;
-use function is_callable;
+use function is_object;
 use function is_string;
-use function sprintf;
 
+/**
+ * @phpstan-import-type MiddlewareSpec from RouteCollectorInterface
+ */
 class RouteGroupCollector implements RouteGroupCollectorInterface
 {
     protected string $prefix = '';
+    /** @var MiddlewareSpec|null */
     protected mixed $middleware;
 
     public function __construct(
         private readonly MezzioRouteCollectorInterface $routeCollector,
         private readonly MiddlewareFactory $middlewareFactory,
     ) {
+        $this->middleware = null;
     }
 
     public function getPrefix(): string
@@ -40,11 +44,17 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this;
     }
 
+    /**
+     * @return MiddlewareSpec|null
+     */
     public function getMiddleware(): mixed
     {
         return $this->middleware;
     }
 
+    /**
+     * @param MiddlewareSpec|null $middleware
+     */
     public function setMiddleware(
         null|string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware
     ): self {
@@ -53,6 +63,12 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this;
     }
 
+    /**
+     * @param MiddlewareSpec $middleware
+     * @param non-empty-string|null $name
+     * @param list<string>|null $methods
+     * @param class-string|list<class-string> $excludeMiddleware
+     */
     public function route(
         string $path,
         string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
@@ -70,6 +86,11 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this;
     }
 
+    /**
+     * @param MiddlewareSpec $middleware
+     * @param non-empty-string|null $name
+     * @param class-string|list<class-string> $excludeMiddleware
+     */
     public function any(
         string $path,
         string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
@@ -85,6 +106,11 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this;
     }
 
+    /**
+     * @param MiddlewareSpec $middleware
+     * @param non-empty-string|null $name
+     * @param class-string|list<class-string> $excludeMiddleware
+     */
     public function delete(
         string $path,
         string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
@@ -100,6 +126,11 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this;
     }
 
+    /**
+     * @param MiddlewareSpec $middleware
+     * @param non-empty-string|null $name
+     * @param class-string|list<class-string> $excludeMiddleware
+     */
     public function get(
         string $path,
         string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
@@ -115,6 +146,11 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this;
     }
 
+    /**
+     * @param MiddlewareSpec $middleware
+     * @param non-empty-string|null $name
+     * @param class-string|list<class-string> $excludeMiddleware
+     */
     public function patch(
         string $path,
         string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
@@ -130,6 +166,11 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this;
     }
 
+    /**
+     * @param MiddlewareSpec $middleware
+     * @param non-empty-string|null $name
+     * @param class-string|list<class-string> $excludeMiddleware
+     */
     public function post(
         string $path,
         string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
@@ -145,6 +186,11 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this;
     }
 
+    /**
+     * @param MiddlewareSpec $middleware
+     * @param non-empty-string|null $name
+     * @param class-string|list<class-string> $excludeMiddleware
+     */
     public function put(
         string $path,
         string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
@@ -168,55 +214,67 @@ class RouteGroupCollector implements RouteGroupCollectorInterface
         return $this->routeCollector->getRoutes();
     }
 
+    /**
+     * @return non-empty-string
+     * @throws InvalidArgumentException When both the prefix and the path are empty.
+     */
     private function preparePath(string $path): string
     {
-        return sprintf('%s%s', $this->prefix, $path);
+        $path = $this->prefix . $path;
+        if ($path === '') {
+            throw InvalidArgumentException::emptyPath();
+        }
+
+        return $path;
     }
 
     /**
+     * Group middleware runs first, minus any listed in $excludeMiddleware, then the route's own middleware.
+     *
+     * @param MiddlewareSpec $middleware
      * @param class-string|list<class-string> $excludeMiddleware
      */
     private function prepareMiddleware(
         string|array|callable|MiddlewareInterface|RequestHandlerInterface $middleware,
         array|string $excludeMiddleware = [],
     ): MiddlewareInterface {
-        if (is_string($excludeMiddleware)) {
-            $excludeMiddleware = [$excludeMiddleware];
-        }
+        $exclude = is_string($excludeMiddleware) ? [$excludeMiddleware] : $excludeMiddleware;
 
-        $prependMiddleware = [];
-        if ($this->middleware !== null) {
-            $prependMiddleware = $this->middleware;
-            if (! is_array($prependMiddleware)) {
-                $prependMiddleware = [$prependMiddleware];
-            }
-        }
-
-        if (is_callable($middleware)) {
-            return $this->middlewareFactory->prepare($middleware);
-        }
-
-        if (! is_array($middleware)) {
-            $middleware = [$middleware];
-        }
-
-        $middleware = array_merge($prependMiddleware, $middleware);
-        $middleware = array_filter(
-            $middleware,
-            function (callable|string|MiddlewareInterface|RequestHandlerInterface $item) use ($excludeMiddleware) {
-                if (is_callable($item)) {
-                    return true;
-                }
-                if ($item instanceof RequestHandlerInterface) {
-                    $item = RequestHandlerInterface::class;
-                }
-                if ($item instanceof MiddlewareInterface) {
-                    $item = MiddlewareInterface::class;
-                }
-                return ! in_array($item, $excludeMiddleware, true);
-            }
+        $groupMiddleware = match (true) {
+            $this->middleware === null => [],
+            MiddlewareFactory::isMiddlewareList($this->middleware) => $this->middleware,
+            default => [$this->middleware],
+        };
+        $groupMiddleware = array_filter(
+            $groupMiddleware,
+            fn (mixed $item): bool => ! $this->isExcluded($item, $exclude)
         );
 
-        return $this->middlewareFactory->prepare($middleware);
+        $routeMiddleware = MiddlewareFactory::isMiddlewareList($middleware) ? $middleware : [$middleware];
+
+        return $this->middlewareFactory->prepare([
+            ...array_values($groupMiddleware),
+            ...$routeMiddleware,
+        ]);
+    }
+
+    /**
+     * @param list<class-string> $exclude
+     */
+    private function isExcluded(mixed $item, array $exclude): bool
+    {
+        if (is_string($item)) {
+            return in_array($item, $exclude, true);
+        }
+
+        if (is_object($item)) {
+            foreach ($exclude as $class) {
+                if ($item instanceof $class) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

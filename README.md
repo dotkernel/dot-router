@@ -18,9 +18,9 @@ Documentation is available at: https://docs.dotkernel.org/dot-router/.
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/dot-router)](https://github.com/dotkernel/dot-router/stargazers)
 [![GitHub license](https://img.shields.io/github/license/dotkernel/dot-router)](https://github.com/dotkernel/dot-router/blob/1.0/LICENSE)
 
-[![Build Static](https://github.com/dotkernel/dot-router/actions/workflows/continuous-integration.yml/badge.svg?branch=1.0)](https://github.com/dotkernel/dot-router/actions/workflows/continuous-integration.yml)
+[![Build Static](https://github.com/dotkernel/dot-router/actions/workflows/continuous-integration.yml/badge.svg?branch=1.x)](https://github.com/dotkernel/dot-router/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/dot-router/graph/badge.svg?token=ubNnFctuDR)](https://codecov.io/gh/dotkernel/dot-router)
-[![PHPStan](https://github.com/dotkernel/dot-router/actions/workflows/static-analysis.yml/badge.svg?branch=1.0)](https://github.com/dotkernel/dot-router/actions/workflows/static-analysis.yml)
+[![PHPStan](https://github.com/dotkernel/dot-router/actions/workflows/static-analysis.yml/badge.svg?branch=1.x)](https://github.com/dotkernel/dot-router/actions/workflows/static-analysis.yml)
 
 ## Requirements
 
